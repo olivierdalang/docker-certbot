@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+echo "Running entrypoint at $(date '+%Y/%m/%d %H:%M:%S')..."
+
 # If no certs exist, we create self-signed certs, as nginx/other may refuse to start
 # without certificates files, preventing them from serving the challenges.
 if [ ! -f /etc/letsencrypt/live/default/privkey.pem ] ||  [ ! -f /etc/letsencrypt/live/default/cert.pem ]; then
