@@ -1,6 +1,6 @@
 # Certbot setup for Docker
 
-Certbot setup for Docker.
+Certbot setup for Docker. [Docker hub repository](https://hub.docker.com/r/olivierdalang/certbot/).
 
 Benefits :
 - in a separate container
@@ -35,6 +35,12 @@ services:
       ...
       - certs:/certs/
       - challenges:/challenges/
+
+# volumes definition
+volumes:
+  ...
+  certs:
+  challenges:
 ```
 
 Set `EMAIL` and `DOMAIN` accordingly.
@@ -46,7 +52,42 @@ The container has access to the main docker socket and can thus run the same doc
 
 Configure your webserver to server `/.well-known` from `/challenges/.well-known` and to load the certificates keys.
 
-Example for uwsgi :
+### Sample config for Nginx :
+
+`nginx.conf` :
+```
+
+http{
+
+    # Default server on port 80 redirects to HTTPS (except for certbot challenge)
+    server {
+        listen 80 default_server;
+        location /.well-known {
+            alias /challenges/.well-known;
+            include  /etc/nginx/mime.types;
+        }
+        location / {
+            return 301 https://$host$request_uri;
+        }
+    }
+
+    # Default server on port 443
+    server {
+        listen          443 ssl default_server;
+
+        ssl_certificate     /certs/cert.pem;
+        ssl_certificate_key /certs/privkey.pem;
+
+        # Replace this section
+        location / {
+            ...
+        }
+    }
+}
+```
+
+### Sample config for UWSGI :
+
 ```
 uwsgi \
     ...
