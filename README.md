@@ -112,8 +112,8 @@ You need to delete the certs, as cerbot won't consider the certs are due for ren
 
 ```
 # Remove the certs
-docker-compose exec certbot rm -rf /etc/letsencrypt/*
+docker-compose exec certbot sh -c 'rm -r /etc/letsencrypt/*'
 # Restart the stack
-docker-compose restart
+docker-compose restart certbot
 ```
 
