@@ -43,9 +43,11 @@ eval "$COMMAND"
 
 echo "First sync was successful !"
 
-CRONJOB="0 * * * * $COMMAND"
+echo "We run the hook..."
+eval "$FULL_HOOK"
 
 echo "And prepare the following cronjob :"
+CRONJOB="0 * * * * $COMMAND"
 echo "$CRONJOB"
 
 echo "Installing the cron job..."
