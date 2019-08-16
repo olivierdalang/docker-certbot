@@ -21,7 +21,7 @@ services:
     environment:
       - EMAIL=admin@example.com
       - DOMAIN=example.com
-      - STAGING=false
+      - MODE=staging
       - HOOK=docker restart mystack_nginx_1
     volumes:
       - certs:/etc/letsencrypt
@@ -45,7 +45,7 @@ volumes:
 
 Set `EMAIL` and `DOMAIN` accordingly.
 
-Set `STAGING` to `true` to get real certificates (but first : check that it works, as you may hit API limit quickly if anything goes wrong).
+Set `MODE` to `production` to get real certificates (but first : check that it works, as you may hit API limit quickly if anything goes wrong). You can also set it to `disabled` to skip completely letsencrypt (you'd only get the self-signed certificates, which can be enough for development).
 
 Set `HOOK` to the command to be run after succesful renewal. This allows to reload/restart the webservers.
 The container has access to the main docker socket and can thus run the same docker commands as the host.
