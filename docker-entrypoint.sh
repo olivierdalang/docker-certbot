@@ -29,7 +29,7 @@ fi
 if [ "$MODE" = "disabled" ]; then
 
     echo "YOU ARE IN DISABLED MODE. Set MODE=staging or MODE=production to get a letsencrypt certificate."
-    COMMAND="echo 'certbot would run now if MODE was staging or production.'"
+    COMMAND="echo '*** certbot would run now if MODE was staging or production. ***'"
 
 else
 
