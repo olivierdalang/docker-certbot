@@ -34,12 +34,12 @@ if [ "$MODE" = "disabled" ]; then
 else
 
     # The hook relinks the certificates (to replace self-signed ones)
-    FULL_HOOK="ln -fs ./live/default/privkey.pem /etc/letsencrypt/privkey.pem && ln -fs ./live/default/cert.pem /etc/letsencrypt/cert.pem"
+    FULL_HOOK="ln -fs ./live/${MODE}/privkey.pem /etc/letsencrypt/privkey.pem && ln -fs ./live/${MODE}/cert.pem /etc/letsencrypt/cert.pem"
     if [ ! -z "$HOOK" ]; then
         FULL_HOOK="$FULL_HOOK && $HOOK"
     fi
 
-    COMMAND="certbot certonly --cert-name default --webroot --webroot-path /challenges --non-interactive --agree-tos -m ${EMAIL} -d ${DOMAIN} --deploy-hook '$FULL_HOOK'"
+    COMMAND="certbot certonly --cert-name ${MODE} --webroot --webroot-path /challenges --non-interactive --agree-tos -m ${EMAIL} -d ${DOMAIN} --deploy-hook '$FULL_HOOK'"
     if [ "$MODE" != "production" ]; then
         echo "YOU ARE IN STAGING MODE. Set MODE=production to generate a real certificate."
         COMMAND="$COMMAND --staging"

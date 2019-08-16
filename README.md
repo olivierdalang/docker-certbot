@@ -103,17 +103,3 @@ uwsgi \
     --route-if-not 'equal:${HTTPS};on redirect-permanent:https://${HTTP_HOST}${REQUEST_URI}' \
     ...
 ```
-
-## FAQ
-
-### Switching from STAGING to PRODUCTION
-
-You need to delete the certs, as cerbot won't consider the certs are due for renewal.
-
-```
-# Remove the certs
-docker-compose exec certbot sh -c 'rm -r /etc/letsencrypt/*'
-# Restart the stack
-docker-compose restart certbot
-```
-
