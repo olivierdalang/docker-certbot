@@ -6,7 +6,7 @@ Benefits:
 - in a separate container
 - runs cron in container
 - can restart/reload other containers through docker socket
-- creates self-signed certificates as a fallback (e.g. when developing on localost)
+- creates self-signed certificates as a fallback (e.g. when developing on localhost)
 
 ## Example
 
@@ -50,7 +50,7 @@ Set `MODE` to `production` to get real certificates (but first: check that it wo
 Set `HOOK` to the command to be run after succesful renewal. This allows to reload/restart the webservers.
 The container has access to the main docker socket and can thus run the same docker commands as the host.
 
-Configure your webserver to server `/.well-known` from `/challenges/.well-known` and to load the certificates keys.
+Configure your webserver to serve `/.well-known` from `/challenges/.well-known` and to load the certificates from `/certs/cert.pem` and `/certs/privkey.pem`.
 
 ### Sample config for Nginx:
 
