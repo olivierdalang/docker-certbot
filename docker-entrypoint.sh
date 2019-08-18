@@ -50,12 +50,12 @@ fi
 echo "We run the command once (initial check)..."
 eval "$COMMAND"
 
-echo "First sync was successful !"
+echo "First sync was successful!"
 
 echo "We run the hook..."
 eval "$FULL_HOOK"
 
-echo "And prepare the following cronjob :"
+echo "And prepare the following cronjob:"
 CRONJOB="0 * * * * $COMMAND"
 echo "$CRONJOB"
 

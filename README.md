@@ -2,7 +2,7 @@
 
 Certbot setup for Docker. [Docker hub repository](https://hub.docker.com/r/olivierdalang/certbot/).
 
-Benefits :
+Benefits:
 - in a separate container
 - runs cron in container
 - can restart/reload other containers through docker socket
@@ -10,7 +10,7 @@ Benefits :
 
 ## Example
 
-In you docker-compose :
+In your `docker-compose.yml`:
 
 ```
 services:
@@ -45,19 +45,19 @@ volumes:
 
 Set `EMAIL` and `DOMAIN` accordingly.
 
-Set `MODE` to `production` to get real certificates (but first : check that it works, as you may hit API limit quickly if anything goes wrong). You can also set it to `disabled` to skip completely letsencrypt (you'd only get the self-signed certificates, which can be enough for development). Defaults to `staging`.
+Set `MODE` to `production` to get real certificates (but first: check that it works, as you may hit API limit quickly if anything goes wrong). You can also set it to `disabled` to skip completely letsencrypt (you'd only get the self-signed certificates, which can be enough for development). Defaults to `staging`.
 
 Set `HOOK` to the command to be run after succesful renewal. This allows to reload/restart the webservers.
 The container has access to the main docker socket and can thus run the same docker commands as the host.
 
 Configure your webserver to server `/.well-known` from `/challenges/.well-known` and to load the certificates keys.
 
-### Sample config for Nginx :
+### Sample config for Nginx:
 
-`nginx.conf` :
+`nginx.conf`:
 ```
 
-http{
+http {
 
     # Default server on port 80 redirects to HTTPS (except for certbot challenge)
     server {
@@ -86,7 +86,7 @@ http{
 }
 ```
 
-### Sample config for UWSGI :
+### Sample config for UWSGI:
 
 ```
 uwsgi \
