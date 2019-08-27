@@ -13,6 +13,9 @@ VOLUME "/certs"
 ADD docker-entrypoint.sh /docker-entrypoint.sh 
 RUN chmod +x /docker-entrypoint.sh
 
+# default config
+ENV HOOK 'echo "No HOOK provided !'
+
 # restore default entrypoint
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["crond", "-f"]
