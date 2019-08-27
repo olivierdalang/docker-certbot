@@ -12,7 +12,7 @@ Benefits:
 
 In your `docker-compose.yml`:
 
-```
+```yaml
 services:
   ...
   # add the certbot service
@@ -54,8 +54,8 @@ Configure your webserver to serve `/.well-known` from `/challenges/.well-known` 
 
 ### Sample config for Nginx:
 
-`nginx.conf`:
-```
+```nginx
+# nginx.conf
 
 http {
 
