@@ -42,7 +42,7 @@ fi
 PRE_HOOK="ln -fs ./self-signed/privkey.pem /etc/letsencrypt/privkey.pem && ln -fs ./self-signed/cert.pem /etc/letsencrypt/cert.pem"
 
 # The post_hook relinks the certificates (to replace self-signed ones) and then runs the provided HOOK
-DEPLOY_HOOK="ln -fs ./live/${MODE}/privkey.pem /etc/letsencrypt/privkey.pem && ln -fs ./live/${MODE}/cert.pem /etc/letsencrypt/cert.pem && $HOOK"
+DEPLOY_HOOK="ln -fs ./live/$MODE/privkey.pem /etc/letsencrypt/privkey.pem && ln -fs ./live/$MODE/cert.pem /etc/letsencrypt/cert.pem && $HOOK"
 
 if [ "$MODE" = "disabled" ]; then
 

@@ -10,7 +10,7 @@ RUN curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-${
 VOLUME "/challenges"
 VOLUME "/certs"
 
-ADD docker-entrypoint.sh /docker-entrypoint.sh 
+ADD docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
 # default config
