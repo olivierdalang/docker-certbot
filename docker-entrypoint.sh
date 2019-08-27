@@ -9,6 +9,17 @@ if [ "$MODE" != "disabled" ] && [ "$MODE" != "staging" ] && [ "$MODE" != "produc
     exit 1
 fi
 
+# $DOMAIN value can be a single domain or multiple domains separated by commas.
+# Preparing a $domain_main that will be used for the self-signed certificate and multi-domain Certbot command.
+c="${DOMAIN//[^,]}"
+dcount=$(( ${#c} + 1 ))
+domain_main=$(echo $DOMAIN | cut -d "," -f 1)
+certbot_domains_cmd=""
+for i in `seq 1 $dcount`; do
+    d=$(echo $DOMAIN | cut -d "," -f $i)
+    certbot_domains_cmd="$certbot_domains_cmd -d $d"
+done
+
 # We create self-signed certs as fallback while we get actual certificates from letsencrypt,
 # as missing certs may prevent webservers from starting and thus serving the challenges.
 if [ ! -f /etc/letsencrypt/self-signed/privkey.pem ] ||  [ ! -f /etc/letsencrypt/self-signed/cert.pem ]; then
@@ -20,7 +31,7 @@ if [ ! -f /etc/letsencrypt/self-signed/privkey.pem ] ||  [ ! -f /etc/letsencrypt
         -days 365 \
         -nodes \
         -x509 \
-        -subj "/C=XX/ST=XXX/L=XXX/O=XXX/CN=${DOMAIN}" \
+        -subj "/C=XX/ST=XXX/L=XXX/O=XXX/CN=$domain_main" \
         -keyout /etc/letsencrypt/self-signed/privkey.pem \
         -out /etc/letsencrypt/self-signed/cert.pem
 else
@@ -31,7 +42,7 @@ fi
 PRE_HOOK="ln -fs ./self-signed/privkey.pem /etc/letsencrypt/privkey.pem && ln -fs ./self-signed/cert.pem /etc/letsencrypt/cert.pem"
 
 # The post_hook relinks the certificates (to replace self-signed ones) and then runs the provided HOOK
-DEPLOY_HOOK="ln -fs ./live/${MODE}/privkey.pem /etc/letsencrypt/privkey.pem && ln -fs ./live/${MODE}/cert.pem /etc/letsencrypt/cert.pem && $HOOK"
+DEPLOY_HOOK="ln -fs ./live/$MODE/privkey.pem /etc/letsencrypt/privkey.pem && ln -fs ./live/$MODE/cert.pem /etc/letsencrypt/cert.pem && $HOOK"
 
 if [ "$MODE" = "disabled" ]; then
 
@@ -42,7 +53,7 @@ if [ "$MODE" = "disabled" ]; then
 
 else
 
-    COMMAND="certbot certonly --cert-name ${MODE} --webroot --webroot-path /challenges --non-interactive --agree-tos -m ${EMAIL} -d ${DOMAIN} --pre-hook '$PRE_HOOK' --deploy-hook '$DEPLOY_HOOK'"
+    COMMAND="certbot certonly --cert-name $MODE --webroot --webroot-path /challenges --non-interactive --agree-tos -m $EMAIL $certbot_domains_cmd --pre-hook '$PRE_HOOK' --deploy-hook '$DEPLOY_HOOK'"
 
     if [ "$MODE" != "production" ]; then
         echo "YOU ARE IN STAGING MODE. Set MODE=production to generate a real certificate."
