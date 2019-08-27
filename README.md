@@ -20,7 +20,7 @@ services:
     image: olivierdalang/certbot:latest
     environment:
       - EMAIL=admin@example.com
-      - DOMAIN=example.com
+      - DOMAINS=example.com,www.example.com
       - MODE=staging
       - HOOK=docker restart mystack_nginx_1
     volumes:
@@ -43,7 +43,7 @@ volumes:
   challenges:
 ```
 
-Set `EMAIL` and `DOMAIN` accordingly.
+Set `EMAIL` and `DOMAINS` accordingly. `DOMAINS` can be a single domain, or a list of comma-separated domains (Certbot will generate a certificate covering all the domains, but the self-signed certificate will only use the first one)
 
 Set `MODE` to `production` to get real certificates (but first: check that it works, as you may hit API limit quickly if anything goes wrong). You can also set it to `disabled` to skip completely letsencrypt (you'd only get the self-signed certificates, which can be enough for development). Defaults to `staging`.
 

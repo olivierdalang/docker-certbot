@@ -9,6 +9,17 @@ if [ "$MODE" != "disabled" ] && [ "$MODE" != "staging" ] && [ "$MODE" != "produc
     exit 1
 fi
 
+# $DOMAINS value can be a single domain or multiple domains separated by commas.
+# Preparing $DOMAIN_MAIN that will be used for the self-signed certificate and multi-domain Certbot command.
+C="${DOMAINS//[^,]}"
+DCOUNT=$(( ${#C} + 1 ))
+DOMAIN_MAIN=$(echo $DOMAINS | cut -d "," -f 1)
+CERTBOT_DOMAINS_ARGS=""
+for i in `seq 1 $DCOUNT`; do
+    D=$(echo $DOMAINS | cut -d "," -f $i)
+    CERTBOT_DOMAINS_ARGS="$CERTBOT_DOMAINS_ARGS -d $D"
+done
+
 # We create self-signed certs as fallback while we get actual certificates from letsencrypt,
 # as missing certs may prevent webservers from starting and thus serving the challenges.
 if [ ! -f /etc/letsencrypt/self-signed/privkey.pem ] ||  [ ! -f /etc/letsencrypt/self-signed/cert.pem ]; then
@@ -20,7 +31,7 @@ if [ ! -f /etc/letsencrypt/self-signed/privkey.pem ] ||  [ ! -f /etc/letsencrypt
         -days 365 \
         -nodes \
         -x509 \
-        -subj "/C=XX/ST=XXX/L=XXX/O=XXX/CN=${DOMAIN}" \
+        -subj "/C=XX/ST=XXX/L=XXX/O=XXX/CN=$DOMAIN_MAIN" \
         -keyout /etc/letsencrypt/self-signed/privkey.pem \
         -out /etc/letsencrypt/self-signed/cert.pem
 else
@@ -42,7 +53,7 @@ if [ "$MODE" = "disabled" ]; then
 
 else
 
-    COMMAND="certbot certonly --cert-name ${MODE} --webroot --webroot-path /challenges --non-interactive --agree-tos -m ${EMAIL} -d ${DOMAIN} --pre-hook '$PRE_HOOK' --deploy-hook '$DEPLOY_HOOK'"
+    COMMAND="certbot certonly --cert-name $MODE --webroot --webroot-path /challenges --non-interactive --agree-tos -m $EMAIL $CERTBOT_DOMAINS_ARGS --pre-hook '$PRE_HOOK' --deploy-hook '$DEPLOY_HOOK'"
 
     if [ "$MODE" != "production" ]; then
         echo "YOU ARE IN STAGING MODE. Set MODE=production to generate a real certificate."
