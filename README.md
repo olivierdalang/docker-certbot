@@ -50,7 +50,7 @@ Set `MODE` to `production` to get real certificates (but first: check that it wo
 Set `HOOK` to the command to be run after succesful renewal. This allows to reload/restart the webservers.
 The container has access to the main docker socket and can thus run the same docker commands as the host.
 
-Configure your webserver to serve `/.well-known` from `/challenges/.well-known` and to load the certificates from `/certs/cert.pem` and `/certs/privkey.pem`.
+Configure your webserver to serve `/.well-known` from `/challenges/.well-known` and to load the certificates from `/certs/fullchain.pem` and `/certs/privkey.pem`.
 
 ### Sample config for Nginx:
 
@@ -75,7 +75,7 @@ http {
     server {
         listen          443 ssl default_server;
 
-        ssl_certificate     /certs/cert.pem;
+        ssl_certificate     /certs/fullchain.pem;
         ssl_certificate_key /certs/privkey.pem;
 
         # Replace this section
@@ -94,7 +94,7 @@ uwsgi \
     # port 80 must be open for the challenge
     --http 0.0.0.0:80 \
     # this is our main socket with the certificates
-    --https 0.0.0.0:443,/certs/cert.pem,/certs/privkey.pem \
+    --https 0.0.0.0:443,/certs/fullchain.pem,/certs/privkey.pem \
     # serve the challenge
     --static-map /.well-known=/challenges/.well-known \
     # any request to /.well-known/* is served as is

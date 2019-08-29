@@ -22,7 +22,7 @@ done
 
 # We create self-signed certs as fallback while we get actual certificates from letsencrypt,
 # as missing certs may prevent webservers from starting and thus serving the challenges.
-if [ ! -f /etc/letsencrypt/self-signed/privkey.pem ] ||  [ ! -f /etc/letsencrypt/self-signed/cert.pem ]; then
+if [ ! -f /etc/letsencrypt/self-signed/privkey.pem ] ||  [ ! -f /etc/letsencrypt/self-signed/fullchain.pem ]; then
     echo "No self-signed certificates found. Generating self-signed certificates..."
     mkdir -p /etc/letsencrypt/self-signed
     openssl req \
@@ -33,16 +33,16 @@ if [ ! -f /etc/letsencrypt/self-signed/privkey.pem ] ||  [ ! -f /etc/letsencrypt
         -x509 \
         -subj "/C=XX/ST=XXX/L=XXX/O=XXX/CN=$DOMAIN_MAIN" \
         -keyout /etc/letsencrypt/self-signed/privkey.pem \
-        -out /etc/letsencrypt/self-signed/cert.pem
+        -out /etc/letsencrypt/self-signed/fullchain.pem
 else
     echo "Existing self-signed certificates found."
 fi
 
 # The pre_hook links to the self-signed certificates
-PRE_HOOK="ln -fs ./self-signed/privkey.pem /etc/letsencrypt/privkey.pem && ln -fs ./self-signed/cert.pem /etc/letsencrypt/cert.pem"
+PRE_HOOK="ln -fs ./self-signed/privkey.pem /etc/letsencrypt/privkey.pem && ln -fs ./self-signed/fullchain.pem /etc/letsencrypt/fullchain.pem"
 
 # The post_hook relinks the certificates (to replace self-signed ones) and then runs the provided HOOK
-DEPLOY_HOOK="ln -fs ./live/$MODE/privkey.pem /etc/letsencrypt/privkey.pem && ln -fs ./live/$MODE/cert.pem /etc/letsencrypt/cert.pem && $HOOK"
+DEPLOY_HOOK="ln -fs ./live/$MODE/privkey.pem /etc/letsencrypt/privkey.pem && ln -fs ./live/$MODE/fullchain.pem /etc/letsencrypt/fullchain.pem && $HOOK"
 
 if [ "$MODE" = "disabled" ]; then
 
