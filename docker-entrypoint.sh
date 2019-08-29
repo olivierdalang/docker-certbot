@@ -74,7 +74,7 @@ if eval "$COMMAND"; then
 else
     echo "FAILURE !"
     if [ "$MODE" = "production" ]; then
-        echo "Waiting for 60 seconds to avoid hitting letsencrypt limit too quickly"
+        echo "Waiting 60 seconds before exiting to avoid hitting letsencrypt limit too quickly"
         sleep 60
     fi
     exit 1
