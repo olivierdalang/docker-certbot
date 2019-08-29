@@ -69,19 +69,15 @@ if [ "$MODE" = "disabled" ]; then
 fi
 
 echo "We run the command once to make sure it works..."
-set +e
-eval "$COMMAND"
-set -e
-
-if [ $? -ne 0 ]; then
+if eval "$COMMAND"; then
+    echo "SUCCESS !"
+else
     echo "FAILURE !"
     if [ "$MODE" = "production" ]; then
         echo "Waiting for 60 seconds to avoid hitting letsencrypt limit too quickly"
         sleep 60
     fi
     exit 1
-else
-    echo "SUCCESS !"
 fi
 
 # We must manually run the DEPLOY_HOOK too in case mode was switched back to "staging" or "production"
