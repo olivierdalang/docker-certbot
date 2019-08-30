@@ -18,6 +18,7 @@ services:
   # add the certbot service
   certbot:
     image: olivierdalang/certbot:latest
+    restart: always
     environment:
       - EMAIL=admin@example.com
       - DOMAINS=example.com,www.example.com
