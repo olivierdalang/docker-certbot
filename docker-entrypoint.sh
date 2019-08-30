@@ -22,7 +22,7 @@ done
 
 # We create self-signed certs as fallback while we get actual certificates from letsencrypt,
 # as missing certs may prevent webservers from starting and thus serving the challenges.
-if [ ! -f /etc/letsencrypt/self-signed/privkey.pem ] ||  [ ! -f /etc/letsencrypt/self-signed/fullchain.pem ]; then
+if [ ! -f /etc/letsencrypt/self-signed/privkey.pem ] ||  [ ! -f /etc/letsencrypt/self-signed/cert.pem ]; then
     echo "No self-signed certificates found. Generating self-signed certificates..."
     mkdir -p /etc/letsencrypt/self-signed
     openssl req \
