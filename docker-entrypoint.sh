@@ -63,10 +63,9 @@ else
 fi
 
 # We must manually run the PRE_HOOK to link to the self-signed certificates in case
-# mode was changed to "disabled"
-if [ "$MODE" = "disabled" ]; then
-    eval "$PRE_HOOK"
-fi
+# certbot fails early (certbot doesnt run PRE_HOOK when it fails early, e.g. no connectivity)
+# or mode is disabled
+eval "$PRE_HOOK"
 
 echo "We run the command once to make sure it works..."
 if eval "$COMMAND"; then
